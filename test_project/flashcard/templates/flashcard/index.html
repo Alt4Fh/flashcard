@@ -1,0 +1,13 @@
+{% extends 'flashcard/_base.html' %}
+{% block content %}
+    <h1>Cards</h1>
+    {% for card in cards %}
+    <ul>
+        <li> <a href="{% url 'card_detail' card.id %}"> 
+            {{ card.question }} </a>
+        </li>
+    </ul>
+ 
+    {% endfor %}
+
+{% endblock %}
