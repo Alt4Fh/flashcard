@@ -1,0 +1,20 @@
+<div id="deck-{{ deck.id }}" class="grid grid-cols-1">
+    <button hx-post="{% url 'deck_detail' deck.id %}" hx-trigger="click"
+        hx-target="#deckList"
+        hx-swap="outerHTML" 
+        class="text-blue-500">
+            <div class="bg-white p-4 text-center rounded-lg shadow-md w-64 hover:bg-gray-200">
+                <h3 class="text-xl font-bold mb-2">{{ deck.name }}</h3>
+                <p class="text-gray-700 mb-4">{{ deck.cards.count }} cards</p>
+            </div>
+    </button>
+    <button hx-delete="{% url 'deck_delete' deck.id %}" hx-trigger="click"
+        hx-target="#deck-{{ deck.id }}"
+        hx-swap="outerHTML" 
+        class="text-blue-500">
+            <div class="bg-white py-3 text-center rounded-lg shadow-md w-64 hover:bg-gray-200">
+                <p class="text-gray-700 mb-1">Delete ❌</p>
+            </div>
+    </button>
+</div>
+

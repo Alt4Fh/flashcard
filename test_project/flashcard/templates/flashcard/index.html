@@ -1,13 +1,21 @@
 {% extends 'flashcard/_base.html' %}
+
+
+
+
+{% block title %} FlashCard {% endblock title %}
+
 {% block content %}
-    <h1>Cards</h1>
-    {% for card in cards %}
-    <ul>
-        <li> <a href="{% url 'card_detail' card.id %}"> 
-            {{ card.question }} </a>
-        </li>
-    </ul>
- 
+
+<div class="flex flex-wrap gap-4 p-6 justify-center text-lg font-serif" id="deckList">
+    {% for deck in decks %}
+
+    {% include 'flashcard/includes/deck_item.html' %}
+
     {% endfor %}
+
+{% include 'flashcard/includes/deck_add_button.html' %}
+
+</div> 
 
 {% endblock %}

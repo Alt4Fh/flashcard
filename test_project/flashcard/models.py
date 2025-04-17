@@ -9,3 +9,12 @@ class Card(models.Model):
         return self.question
     def get_absolute_url(self):
         return reverse('card_detail', args=[str(self.id)])
+
+
+class Deck(models.Model):
+    name = models.CharField(max_length=100)
+    cards = models.ManyToManyField(Card)
+    def __str__(self):
+        return self.name    
+    
+    

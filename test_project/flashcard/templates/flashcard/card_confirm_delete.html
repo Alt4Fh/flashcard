@@ -1,0 +1,17 @@
+{% extends 'flashcard/_base.html' %}
+
+{% block title %}
+confirm delete card
+{% endblock title %}
+
+{% block content %}
+
+<h1>Confirm Delete</h1>
+<p>Are you sure you want to delete this card"{{ card.question }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Delete</button>
+</form>
+<a href="{% url 'card_list' %}">Cancel</a>
+
+{% endblock %}
