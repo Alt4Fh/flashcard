@@ -9,6 +9,13 @@
         {% block title %} {% endblock title %}
     </title>
     {% htmx_script %}
+
+    <style>
+      svg{
+        display: inline;
+      }
+    </style>  
+
   </head>
   <body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'>
     {% block content %} {% endblock content %}
