@@ -1,3 +1,4 @@
+import json, struct
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
@@ -13,13 +14,29 @@ def cards_of_a_deck_view(request, deck_id):
     cards = deck.cards.all()
     return render(request, 'flashcard/deck_detail.html', {'deck': deck, 'cards': cards})
 
-@require_POST
+
 def deck_add_form_view(request):
+    if request.method == 'POST':
+        deck_id = request.POST.get('deck_id')
+        deck = get_object_or_404(Deck, pk=deck_id)
+        context = {'deck': deck}
+        return render(request, 'flashcard/partials/deck_form.html', context=context)
+
     return render(request, 'flashcard/partials/deck_form.html')
 
 @require_POST
 def deck_add_view(request):
     name = request.POST.get('name')
+    deck_id = request.POST.get('deck_id')
+    print(deck_id)
+    if deck_id: 
+    # update deck name    
+        deck = get_object_or_404(Deck, pk=deck_id)
+        deck.name = name
+        deck.save()
+        return render(request, 'flashcard/includes/deck_item.html', {'deck': deck})
+    
+    # create new deck
     deck = Deck.objects.create(name=name)
     return render(request, 'flashcard/partials/deck_add_button_item.html', {'deck': deck})
 
