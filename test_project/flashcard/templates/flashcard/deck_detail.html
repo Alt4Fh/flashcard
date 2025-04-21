@@ -1,8 +1,12 @@
 {% extends 'flashcard/_base.html' %}
 {% block content %}
 
-    <h3>Deck :{{ deck.name }}</h3>
+    {% if deck.cards.count != 0 %}
     
-    {% include 'flashcard/card_list.html' %}
+    {% include 'flashcard/includes/card_item.html' with card=deck.cards.first %}
+    {% else %}
+    <p>No cards available in this deck.</p>
+
+    {% endif %}
    
  {% endblock %}

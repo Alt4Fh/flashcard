@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-
+from django.core.paginator import Paginator
 # Create your views here.
 from .models import Card, Deck
 
@@ -12,7 +12,11 @@ from .models import Card, Deck
 def cards_of_a_deck_view(request, deck_id):
     deck = get_object_or_404(Deck, pk=deck_id)
     cards = deck.cards.all()
-    return render(request, 'flashcard/deck_detail.html', {'deck': deck, 'cards': cards})
+    paginator = Paginator(cards, 1)  # Show 1 card per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    # print(page_obj.object_list[0].question)
+    return render(request, 'flashcard/includes/card_item.html', {'deck': deck, 'page_obj': page_obj})
 
 
 def deck_add_form_view(request):
@@ -46,6 +50,10 @@ def deck_delete_view(request, deck_id):
     deck.delete()
     return HttpResponse('')
 
+
+
+
+
 class DeckListView(ListView):
     model = Deck
     template_name = 'flashcard/index.html'
@@ -53,26 +61,17 @@ class DeckListView(ListView):
 
 
 
-
-class DeckDetailView(DetailView):
-    model = Deck
-    template_name = 'flashcard/deck_detail.html'
-    context_object_name = 'deck'
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        
-        return render(request, self.template_name, self.get_context_data(object=self.object))
-
-
 class CardListView(ListView):
+    paginate_by = 1
     model = Card
-    template_name = 'flashcard/card_list.html'
+    template_name = 'flashcard/includes/card_item.html'
     context_object_name = 'cards'
+
+    
 
 class CardDetailView(DetailView):
     model = Card
-    template_name = 'flashcard/card_detail.html'
+    template_name = 'flashcard/includes/card_item.html'
     context_object_name = 'card'
 
 class CardDeleteView(DeleteView):
