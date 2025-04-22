@@ -8,8 +8,7 @@ class Card(models.Model):
     answer = models.TextField()
     def __str__(self):
         return self.question
-    def get_absolute_url(self):
-        return reverse('card_detail', args=[str(self.id)])
+    
 
 
 class Deck(models.Model):

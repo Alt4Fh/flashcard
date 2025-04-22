@@ -9,6 +9,9 @@
     <title>
         {% block title %} {% endblock title %}
     </title>
+
+    
+
     {% htmx_script %}
 
     <style>
@@ -20,6 +23,11 @@
       svg{
         display: inline;
       }
+
+      {% block style %}
+    
+    {% endblock style %}
+
     </style>  
 
   </head>

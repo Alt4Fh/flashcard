@@ -16,7 +16,7 @@ def cards_of_a_deck_view(request, deck_id):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     # print(page_obj.object_list[0].question)
-    return render(request, 'flashcard/includes/card_item.html', {'deck': deck, 'page_obj': page_obj})
+    return render(request, 'flashcard/partials/deck_detail.html', {'deck': deck, 'page_obj': page_obj})
 
 
 def deck_add_form_view(request):
@@ -54,41 +54,37 @@ def deck_delete_view(request, deck_id):
 
 
 
+
 class DeckListView(ListView):
     model = Deck
     template_name = 'flashcard/index.html'
     context_object_name = 'decks'
 
-
-
-class CardListView(ListView):
-    paginate_by = 1
-    model = Card
-    template_name = 'flashcard/includes/card_item.html'
-    context_object_name = 'cards'
-
     
 
-class CardDetailView(DetailView):
-    model = Card
-    template_name = 'flashcard/includes/card_item.html'
-    context_object_name = 'card'
 
 class CardDeleteView(DeleteView):
     model = Card
-    template_name = "flashcard/card_confirm_delete.html"
-    
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        return 
+    # template_name = "flashcard/partials/card_confirm_delete.html"
+    success_url = reverse_lazy('home')
+
+    # def post(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     self.object.delete()
+    #     return 
+
+
+def card_delete_confirm_view(request, card_id):
+    card = get_object_or_404(Card, pk=card_id)
+    return render(request, 'flashcard/partials/delete_confirm_model.html', {'card': card})
+
 
 
 class CardCreateView(CreateView):
     model = Card
     template_name = 'flashcard/card_form.html'
     fields = ['question', 'answer']
-    success_url = reverse_lazy('card_list')
+    success_url = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -100,7 +96,7 @@ class CardUpdateView(UpdateView):
     model = Card    # Specify the model to use
     template_name = 'flashcard/card_form.html'  # Specify the template to use
     fields = ['question', 'answer']  # Specify the fields to include in the form
-    success_url = reverse_lazy('card_list')  # Specify the URL to redirect to after successful form submission  
+    success_url = reverse_lazy('home')  # Specify the URL to redirect to after successful form submission  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

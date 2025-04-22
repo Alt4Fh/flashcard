@@ -1,0 +1,11 @@
+
+
+    {% if deck.cards.count != 0 %}
+    
+     {% include 'flashcard/includes/card_item.html' %}
+    {% else %}
+    <p class="text-white text-3xl">No cards available in this deck.</p>
+
+    {% endif %}
+   
+ 
