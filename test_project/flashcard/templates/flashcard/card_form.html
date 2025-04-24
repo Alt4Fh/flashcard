@@ -1,92 +1,46 @@
-{% extends 'flashcard/_base.html' %}
+<div id="cardContainer">
+  <h2 class="text-3xl font-bold text-center text-white mb-2 neon-text text capitalize">
+    {% if view_type == 'create' %}
+      Add
+    {% else %}
+      Update
+    {% endif %}Card
+  </h2>
+  <form method="post">
+    {% csrf_token %}
+    <textarea name="question" id="question" class="card-form-input text-center text-lg text-pink-300 mb-4 focus:text-teal-300" autofocus>{{ card.question }}</textarea>
 
+    <div class="border-t border-pink-500 pt-4 space-y-2">
+      <p class="text-white">
+        <span class="font-semibold text-pink-300">Answer:</span>
+        <textarea name="answer" id="answer" class="card-form-input focus:text-teal-300">{{ card.answer }}</textarea>
+      </p>
+    </div>
 
-{% block style %}
-.card-form-input{
-  border:none;
-  background-image:none;
-  background-color:transparent;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  width: 100%;
-  outline: none;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-  resize:none;
-  
-}
-
-.card-form-input::-webkit-scrollbar {
-  display: none;
-}
-
-
-{% endblock style %}
-
-{% block content %}
-<div id="delete-modal"></div>
-  <div class="pagination" id="card">
-    <div class="flex items-center justify-center min-h-screen p-4">
-      <div class="bg-black bg-opacity-50 rounded-lg shadow-2xl p-8 max-w-md w-full neon-border" id="cardContainer">
-        <h2 class="text-3xl font-bold text-center text-white mb-2 neon-text text capitalize">
-          {% if view_type == 'create' %}
+    <div class="mt-6 flex justify-center space-x-4">
+      {% if view_type == 'create' %}
+        <button class="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white text-2xl font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border" type="submit"
+          hx-post="{% url "card-create"  %}"
+          hx-target="#card"
+          hx-swap='outerHTML'
+          >
             Add
-          {% else %}
+          </button>
+        {% else %}
+        <button class="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white text-2xl font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border" type="submit"
+          hx-post="{% url "card-update" card.id %}"
+          hx-target="#card"
+          hx-swap='outerHTML'
+          >
             Update
-          {% endif %}Card
-        </h2>
-        <form method="post">
-          {% csrf_token %}
-          <textarea name="question" id="question"
-          class="card-form-input text-center text-lg text-pink-300 mb-4 focus:text-teal-300 " 
-           autofocus>
-           {{ card.question }}
-          </textarea>
+          </button>
           
-          <div class="border-t border-pink-500 pt-4 space-y-2">
-            <p class="text-white">
-              <span class="font-semibold text-pink-300">Answer:</span> 
-            <textarea name="answer" id="answer" 
-            class="card-form-input focus:text-teal-300"
-            > 
-            {{ card.answer }}
-            </textarea>
-            </p>
-          </div>
+        {% endif %}
+      <a class="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white text-2xl font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border" href="{% url 'home' %}">Cancel</a>
 
-          <div class="mt-6 flex justify-center space-x-4">
-            
-              <button class="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white text-2xl font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border"
-              type="submit">
-
-                {% if view_type == 'create' %}
-                  Add
-                {% else %}
-                  Update
-                {% endif %}
-              </button>
-              <a class="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white text-2xl font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border" 
-                  href="{% url 'home' %}">
-              Cancel
-              </a>
-              
-              {% if view_type == 'update' %}
-          
-                <button class="bg-gradient-to-r from-red-500 to-[#3c0009] hover:from-red-600 hover:to-[#140003] text-white text-2xl font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border" 
-                    hx-get="{% url 'delete_confirm' card.id %}"
-                    hx-target="#delete-modal"
-                    hx-swap="innerHTML"
-                    >
-                Delete
-               </button>
-              
-                {% endif %}
-            
-          </div>
-        </form>
-    </div> <!-- End of card container -->
-  </div> <!-- End of pagination -->
-
-
-  {% endblock %}
+      {% if view_type == 'update' %}
+        <button class="bg-gradient-to-r from-red-500 to-[#3c0009] hover:from-red-600 hover:to-[#140003] text-white text-2xl font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border" hx-get="{% url 'delete_confirm' card.id %}" hx-target="#delete-modal" hx-swap="innerHTML">Delete</button>
+      {% endif %}
+    </div>
+  </form>
+</div>

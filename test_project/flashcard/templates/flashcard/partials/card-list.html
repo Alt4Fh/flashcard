@@ -1,0 +1,19 @@
+{% extends 'flashcard/_card-skeleton.html' %}
+
+{% block card_content %}
+  {% for card in cards %}
+    <button 
+        hx-get="{% url 'card-item' card.id %}" 
+        hx-target="#card"
+        hx-swap="outerHTML"
+        class="text-3xl font-bold text-center text-white mb-2 neon-text text capitalize">{{ card.question }}
+    </button>
+  {% endfor %}
+
+  <div class="step-links mt-6 flex justify-center space-x-4">
+      <a href="{% url "home" %}" class="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white text-2xl font-bold py-2 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border">
+      Home
+      </a>
+  
+  </div>
+{% endblock %}

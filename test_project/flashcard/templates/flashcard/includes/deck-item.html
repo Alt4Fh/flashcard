@@ -1,5 +1,5 @@
 <div id="deck-{{ deck.id }}" class="grid grid-cols-1">
-    <button hx-post="{% url 'deck_detail' deck.id %}" hx-trigger="click"
+    <button hx-get="{% url 'deck-item' deck.id %}" hx-trigger="click"
         hx-target="#deckList"
         hx-swap="outerHTML" 
         class="text-blue-500">

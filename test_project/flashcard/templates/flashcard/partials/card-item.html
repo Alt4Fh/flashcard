@@ -1,0 +1,60 @@
+{% extends "flashcard/_card-skeleton.html" %}
+
+
+{% block card_content %}
+{% if not message %}
+
+<div id="cardContainer">
+
+  <h2 class="text-3xl font-bold text-center text-white mb-2 neon-text text capitalize">
+    {% if deck %}
+    {{ deck.name }}
+    {% endif %}
+    {{ current_card.deck.name }}
+  </h2>
+  <p class="text-center text-xs text-teal-300 mb-4">card: {{ current_page.number }} / {{ cards.count }}</p>
+  <p class="mb-8">
+    <button
+    class="text-center text-lg text-pink-300"
+    hx-get="{% url 'card-update' current_card.id %}"
+    hx-target="#cardContainer"
+    hx-swap='outerHTML'
+    >{{ current_card.question }}</button>
+  </p>
+  <div class="border-t border-pink-500 pt-4 space-y-2">
+    <p class="text-white">
+      <span class="font-semibold text-pink-300">Answer:</span> {{ current_card.answer }}
+    </p>
+  </div>
+
+  <div class="step-links mt-6 flex justify-center space-x-4">
+    {% if current_page.has_previous%}
+    <button class="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white text-2xl font-bold py-2 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border" 
+    hx-get="{% url 'card-items'  %}?page={{ current_page.previous_page_number }}" 
+    hx-trigger="click" 
+    hx-target="#card" 
+    hx-swap="outerHTML"><i class="ri-arrow-left-double-fill"></i></button>
+    {% else %}
+    <button class="bg-gradient-to-r from-pink-500 to-purple-500 text-white text-2xl font-bold py-2 px-8 rounded-full" disabled><i class="ri-arrow-left-double-fill"></i></button>
+    {% endif %}
+
+    {% if  current_page.has_next %}
+    <button class="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white text-2xl font-bold py-2 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border" 
+    hx-get="{% url 'card-items' %}?page={{ current_page.next_page_number }}" 
+    hx-trigger="click" 
+    hx-target="#card" 
+    hx-swap="outerHTML"><i class="ri-arrow-right-double-fill"></i></button>
+    {% else %}
+    <button class="bg-gradient-to-r from-blue-500 to-teal-500 text-white text-2xl font-bold py-2 px-8 rounded-full" disabled><i class="ri-arrow-right-double-fill"></i></button>
+    {% endif %}
+  </div>
+
+  {% else %}
+  <h2> {{ message }} </h2>
+
+
+  {% endif %}
+
+</div>
+
+{% endblock %}

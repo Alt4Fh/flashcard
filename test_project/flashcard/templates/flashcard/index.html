@@ -5,12 +5,37 @@
 
 {% block title %} FlashCard {% endblock title %}
 
+
+{% block style %}
+
+.card-form-input{
+    border:none;
+    background-image:none;
+    background-color:transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    width: 100%;
+    outline: none;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    resize:none;
+    
+  }
+  
+  .card-form-input::-webkit-scrollbar {
+    display: none;
+  }
+
+
+{% endblock style %}
+
 {% block content %}
 
 <div class="flex flex-wrap gap-4 p-6 justify-center text-lg font-serif" id="deckList">
     {% for deck in decks %}
 
-    {% include 'flashcard/includes/deck_item.html' %}
+    {% include 'flashcard/includes/deck-item.html' %}
 
     {% endfor %}
 
