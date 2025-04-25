@@ -1,4 +1,5 @@
 import json, struct
+from typing import Any
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST
@@ -8,6 +9,7 @@ from django.urls import reverse_lazy
 from django.core.paginator import Paginator
 # Create your views here.
 from .models import Card, Deck
+from .forms import CardForm
 
 class DeckCardView(View):
     def get(self, request, deck_id=None, card_id=None):
@@ -24,6 +26,8 @@ class DeckCardView(View):
                 cards = deck.cards.all()
             except Deck.DoesNotExist:
                 message = 'No deck found'
+            
+
 
             if deck and card_id:
                 try:
@@ -91,14 +95,14 @@ class DeckCardView(View):
 #     return render(request, 'flashcard/partials/deck_detail.html', {'deck': deck, 'page_obj': page_obj})
 
 
-def deck_add_form_view(request):
-    if request.method == 'POST':
-        deck_id = request.POST.get('deck_id')
-        deck = get_object_or_404(Deck, pk=deck_id)
-        context = {'deck': deck}
-        return render(request, 'flashcard/partials/deck_form.html', context=context)
+# def deck_add_form_view(request):
+#     if request.method == 'POST':
+#         deck_id = request.POST.get('deck_id')
+#         deck = get_object_or_404(Deck, pk=deck_id)
+#         context = {'deck': deck}
+#         return render(request, 'flashcard/partials/deck_form.html', context=context)
 
-    return render(request, 'flashcard/partials/deck_form.html')
+#     return render(request, 'flashcard/partials/deck_form.html')
 
 @require_POST
 def deck_add_view(request):
@@ -114,13 +118,38 @@ def deck_add_view(request):
     
     # create new deck
     deck = Deck.objects.create(name=name)
-    return render(request, 'flashcard/partials/deck_add_button_item.html', {'deck': deck})
+    return render(request, 'flashcard/partials/deck-add-button-item.html', {'deck': deck})
 
 
-def deck_delete_view(request, deck_id):
-    deck = get_object_or_404(Deck, pk=deck_id)
-    deck.delete()
-    return HttpResponse('')
+
+class DeckCreateView(CreateView):
+    model = Deck
+    fields = '__all__'
+    template_name = "flashcard/partials/deck-form.html"
+    # success_url
+   
+    
+
+class DeckUpdateView(UpdateView):
+    model = Deck
+    template_name = "deck-form.html"
+
+
+class DeckDeleteView(DeleteView):
+    model = Deck
+    template_name = "flashcard/partials/delete-confirm-modal.html"
+
+
+class DeckDetailView(DetailView):
+    model = Deck
+    template_name = "flashcard/partials/deck-add-button-item.html"
+
+
+
+# def deck_delete_view(request, deck_id):
+#     deck = get_object_or_404(Deck, pk=deck_id)
+#     deck.delete()
+#     return HttpResponse('')
 
 
 
@@ -135,25 +164,8 @@ class DeckListView(ListView):
     
 
 
-class CardDeleteView(DeleteView):
-    model = Card
-    # template_name = "flashcard/partials/card_confirm_delete.html"
-    success_url = reverse_lazy('home')
-
-    # def post(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     self.object.delete()
-    #     return 
-
-
-def card_delete_confirm_view(request, card_id):
-    card = get_object_or_404(Card, pk=card_id)
-    return render(request, 'flashcard/partials/delete_confirm_model.html', {'card': card})
-
-
-
 class CardCreateView(CreateView):
-    model = Card
+    form = CardForm
     template_name = 'flashcard/card_form.html'
     fields = ['question', 'answer']
     success_url = reverse_lazy('home')
@@ -163,16 +175,38 @@ class CardCreateView(CreateView):
         context["view_type"] = "create"
         return context
     
+
+class CardDeleteView(DeleteView):
+    model = Card
+    template_name = 'flashcards/partials/delet_confirm_model.html'
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        deck = self.object.deck
+        self.object.delete()
+        # Return to deck afte deletion of tha card
+        return HttpResponseRedirect(reverse_lazy('deck-item', args=[deck.id] ))
+
+
+
+def card_delete_confirm_view(request, card_id):
+    """
+    view to make confirmation on deletion of the card
+
+    """
+    card = get_object_or_404(Card, pk=card_id)
+    return render(request, 'flashcard/partials/delete-confirm-modal.html', {'card': card})
+
+
     
 class CardUpdateView(UpdateView):
-    model = Card    # Specify the model to use
+    form = CardForm    # Specify the form
     template_name = 'flashcard/card_form.html'  # Specify the template to use
-    fields = ['question', 'answer']  # Specify the fields to include in the form
     
     def form_valid(self, form):
         # Save the updated object
         self.object = form.save()
-        # Return an HttpResponse (e.g., JSON response)
+        # Return the card after the updation
         return HttpResponseRedirect(reverse_lazy('card-item',  args=[self.object.id]))
 
     def form_invalid(self, form):

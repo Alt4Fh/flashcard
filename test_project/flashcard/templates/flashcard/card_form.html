@@ -39,7 +39,7 @@
       <a class="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white text-2xl font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border" href="{% url 'home' %}">Cancel</a>
 
       {% if view_type == 'update' %}
-        <button class="bg-gradient-to-r from-red-500 to-[#3c0009] hover:from-red-600 hover:to-[#140003] text-white text-2xl font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border" hx-get="{% url 'delete_confirm' card.id %}" hx-target="#delete-modal" hx-swap="innerHTML">Delete</button>
+        <button class="bg-gradient-to-r from-red-500 to-[#3c0009] hover:from-red-600 hover:to-[#140003] text-white text-2xl font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 neon-border" hx-get="{% url 'card-delete-confirm' card.id %}" hx-target="#delete-modal" hx-swap="innerHTML">Delete</button>
       {% endif %}
     </div>
   </form>

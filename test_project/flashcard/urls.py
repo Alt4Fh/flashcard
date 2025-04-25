@@ -1,13 +1,14 @@
 from django.urls import path
 from .views import (
-    deck_add_form_view, 
-    deck_add_view, 
-    deck_delete_view, 
     DeckCardView,
     DeckListView,
-    CardDeleteView,
-    CardUpdateView,
+    DeckDetailView,
+    DeckCreateView,
+    DeckUpdateView,
+    DeckDeleteView,
     CardCreateView,
+    CardUpdateView,
+    CardDeleteView,
 
     card_delete_confirm_view,
    
@@ -15,20 +16,22 @@ from .views import (
 
 urlpatterns = [
     path('', DeckListView.as_view(), name='home'),
+    ## ------ deck --------
+    path("deck/create/", DeckCreateView.as_view(), name="deck-create"),
+    path("deck/<int:deck_id>/update/", DeckUpdateView.as_view(), name="deck-update"),
+    path("deck/<int:deck_id>/delete/", DeckDeleteView.as_view(), name="deck-delete"),
+    #---- cards-------------------
+    path('cards/', DeckListView.as_view(),  name='card-items'), ## view all card -- home
     #------------------- htmx post request ------------------------------------
 
-    path('decks/<int:deck_id>/', DeckCardView.as_view(),  name='deck-item'), ## view cards of a deck
+    path('decks/<int:pk>/', DeckDetailView.as_view(),  name='deck-item'), ## view deck shows name and no of cards and also return + button for deck
+    path('decks/<int:deck_id>/cards/', DeckCardView.as_view(),  name='deck-detail'), ## view cards of a deck
     path('decks/<int:deck_id>/<int:card_id>/', DeckCardView.as_view(),  name='deck-card-item'), ## view a card of a deck
-    path('cards/', DeckCardView.as_view(),  name='card-items'), ## view all card
-    path('cards/<int:card_id>/', DeckCardView.as_view(), name='card-item'), ## view a card from all cards
+    path('cards/<int:deck_id>/<int:card_id>/', DeckCardView.as_view(), name='card-item'), ## view a card from all a deck
+    path("card/<int:deck_id>/create", CardCreateView.as_view(), name="card-create"), ## card creation default deck is id 1
+    path("card/<int:card_id>/update", CardUpdateView.as_view(), name="card-update"), # update card 
+    path("card/<int:card_id>/delete", CardDeleteView.as_view(), name="card-delete"), # update card 
+    # path("card/<int:card_id>/delete-confirm", CardDeleteView.as_view(), name="card-delete-confirm"), # update card 
 
-    path('deck_form/', deck_add_form_view, name='deck_add_form' ),
-    path('deck_add/', deck_add_view, name='deck_add' ),
-    path("decks/<int:deck_id>/delete/", deck_delete_view, name="deck_delete"),
-    path('card/<int:pk>/delete/', CardDeleteView.as_view(), name='card_delete'),
-    path("card/<int:pk>/update/", CardUpdateView.as_view(), name="card-update"),
-    path("card/create/", CardCreateView.as_view(), name="card-create"),
-    path('card/<int:card_id>/delete_confirm/', card_delete_confirm_view, name="delete_confirm"),
-    
 
 ]

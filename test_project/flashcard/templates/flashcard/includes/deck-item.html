@@ -1,15 +1,19 @@
 <div id="deck-{{ deck.id }}" class="grid grid-cols-1">
-    <button hx-get="{% url 'deck-item' deck.id %}" hx-trigger="click"
+    <button hx-get="{% url 'deck-detail' deck.id %}" hx-trigger="click"
         hx-target="#deckList"
         hx-swap="outerHTML" 
         class="text-blue-500">
             <div class="bg-white p-4 text-center rounded-lg shadow-md w-64 hover:bg-gray-200">
                 <h3 class="text-xl font-bold mb-2">{{ deck.name }}</h3>
+                {% if deck.cards %}
                 <p class="text-gray-700 mb-4">{{ deck.cards.count }} cards</p>
+                {% else %}
+                <p> No cards in the deck </p>
+                {% endif %}
             </div>
     </button>
     <div class="grid grid-cols-2 mt-1 w-full">
-        <button hx-delete="{% url 'deck_delete' deck.id %}" hx-trigger="click"
+        <button hx-delete="{% url 'deck-delete' deck.id %}" hx-trigger="click"
             hx-target="#deck-{{ deck.id }}"
             hx-swap="outerHTML" 
             class="text-blue-500">
@@ -17,7 +21,7 @@
                     <p class="text-gray-700 mb-1">Delete ❌</p>
                 </div>
         </button>
-        <button hx-post="{% url 'deck_add_form'%}" hx-trigger="click"
+        <button hx-post="{% url 'deck-create'%}" hx-trigger="click"
             hx-target="#deck-{{ deck.id }}"
             hx-swap="outerHTML" 
             class="text-blue-500"
