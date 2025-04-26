@@ -19,7 +19,7 @@ urlpatterns = [
     ## ------ deck --------
     path("deck/create/", DeckCreateView.as_view(), name="deck-create"),
     path("deck/<int:deck_id>/update/", DeckUpdateView.as_view(), name="deck-update"),
-    path("deck/<int:deck_id>/delete/", DeckDeleteView.as_view(), name="deck-delete"),
+    path("deck/<int:pk>/delete/", DeckDeleteView.as_view(), name="deck-delete"), # delete deck confirm view modal on get request and on delete request it will be deleted 
     #---- cards-------------------
     path('cards/', DeckListView.as_view(),  name='card-items'), ## view all card -- home
     #------------------- htmx post request ------------------------------------
@@ -29,9 +29,8 @@ urlpatterns = [
     path('decks/<int:deck_id>/<int:card_id>/', DeckCardView.as_view(),  name='deck-card-item'), ## view a card of a deck
     path('cards/<int:deck_id>/<int:card_id>/', DeckCardView.as_view(), name='card-item'), ## view a card from all a deck
     path("card/<int:deck_id>/create", CardCreateView.as_view(), name="card-create"), ## card creation default deck is id 1
-    path("card/<int:card_id>/update", CardUpdateView.as_view(), name="card-update"), # update card 
-    path("card/<int:card_id>/delete", CardDeleteView.as_view(), name="card-delete"), # update card 
-    # path("card/<int:card_id>/delete-confirm", CardDeleteView.as_view(), name="card-delete-confirm"), # update card 
+    path("card/<int:card_id>/update", CardUpdateView.as_view(), name="card-update"), # update card  
+    path("card/<int:pk>/delete", CardDeleteView.as_view(), name="card-delete"), # delete card confirm view modal on get request and on delete request it will be deleted 
 
 
 ]

@@ -1,7 +1,7 @@
 import json, struct
 from typing import Any
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views import View
@@ -139,6 +139,12 @@ class DeckDeleteView(DeleteView):
     model = Deck
     template_name = "flashcard/partials/delete-confirm-modal.html"
 
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        deck_id = self.object.id
+        self.object.delete()
+        return HttpResponse(f'<div>Deleted Successfull Deck: {deck_id} </div>')
 
 class DeckDetailView(DetailView):
     model = Deck
@@ -180,11 +186,13 @@ class CardDeleteView(DeleteView):
     model = Card
     template_name = 'flashcards/partials/delet_confirm_model.html'
 
+   
+
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         deck = self.object.deck
         self.object.delete()
-        # Return to deck afte deletion of tha card
+        # Return to deck after deletion of the card
         return HttpResponseRedirect(reverse_lazy('deck-item', args=[deck.id] ))
 
 
